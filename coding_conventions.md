@@ -56,8 +56,7 @@ Or, when to use separate functions, scripts, etc.?
 ** For time-critical functions, do *not* "copy out" the individual fields of the struct (e.g. `screenSize = P.screenSize;`)
 ** For non-time-critical function, *do* copy out fields.
 * mandatory: write a "help" section for each function
-
-
+* For organizing sets of functions (e.g. preparing a task, running a task, and post-processing a task), use underscores in names as appropriate
 
 # code optimization
 try to optimize your MAtlab code as much as possible for the time-critical parts. (do not over-do it for the other parts..)
