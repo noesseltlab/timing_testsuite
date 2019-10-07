@@ -16,4 +16,7 @@ addpath(sprintf('%s/PTB_utils',projectRoot));
 % add utils unrelated to PTB
 addpath(sprintf('%s/utils',projectRoot));
 
+% add PTB test functions (to test audio and input device)
+addpath(sprintf('%s/tests',projectRoot));
+
 end
