@@ -14,8 +14,8 @@ function ITIs = GenerateITIs(nTrials, nRepeats, framerate, max_ITI)
 %                       to set the temporal resolution to 1/framerate of
 %                       the ITIs.
 % 
-%   max_ITI             ... integer. Optional. Maximal value of ITIs to
-%                       allow (Unit: frames !). Beware that a small value will
+%   max_ITI             ... double. Optional. Maximal value of ITIs to
+%                       allow (Unit: seconds). Beware that a small value will
 %                       make the distribution of ITIs no longer
 %                       exponentially distributed; whether such large
 %                       values are present depends on nTrails. default = 8
@@ -40,28 +40,46 @@ function ITIs = GenerateITIs(nTrials, nRepeats, framerate, max_ITI)
 % 
 %       To instead generate 250 different ITIs and reshape afterwards, call:
 %       ITIs = GenerateITIs(250,1,60); ITIs = reshape(ITIs,50,5);
+% % % % 
+% % % % % set defaults
+% % % % if ~exist('max_ITI','var')
+% % % %    max_ITI = 8;  % in seconds
+% % % % end
+% % % % 
+% % % % % generate exponentially distributed set of ITIs
+% % % % % TODO: look up correct mean of this exponential distribution. Should be a
+% % % % % function of HRF, I think...
+% % % % exp_mean = 2; % convert seconds into nr of frames
+% % % % itis = exprnd(exp_mean,[nTrials,1]);
+% % % % 
+% % % % % limiti large ITIs to `max_ITI`
+% % % % itis(itis > max_ITI) = max_ITI;
+% % % % 
+% % % % % limit small ITIs to min_ITI
+% % % % min_ITI = 0.5;
+% % % % itis(itis < min_ITI) = min_ITI;
+% % % % 
+% % % % % convert to timeunits == frames, and round to temporal resolution implied
+% % % % % by frame-rate
+% % % % itis = round(itis * framerate);
+% % % % % increase ITIs granularity to 6 frames - 100ms
+% % % % itis = round(itis / 6) * 6;
+% % % % 
+% % % % % expand to matrix
+% % % % ITIs = itis * ones(1,nRepeats); 
+% % % % 
+% % % % % shuffle rows
+% % % % for iRepeat = 2:nRepeats
+% % % %    ITIs(:,iRepeat) = ITIs(randperm(nTrials),iRepeat);
+% % % % end
 
-% set defaults
-if ~exist('max_ITI','var')
-   max_ITI = 8 * framerate;  % convert seconds into nr of frames
-end
 
-% generate exponentially distributed set of ITIs
-% TODO: look up correct mean of this exponential distribution. Should be a
-% function of HRF, I think...
-exp_mean = 2 * framerate; % convert seconds into nr of frames
-itis = exprnd(exp_mean,[nTrials,1]);
+load('itis.mat');
+ITIs = itis;
 
-% limiti large ITIs to `max_ITI`
-itis(itis > max_ITI) = max_ITI;
-
-% round to temporal resolution implied by frame-rate
-itis = round(itis);
-
-% expand to matrix
 ITIs = itis * ones(1,nRepeats); 
 
-% shuffle rows
+%  shuffle rows
 for iRepeat = 2:nRepeats
    ITIs(:,iRepeat) = ITIs(randperm(nTrials),iRepeat);
 end
