@@ -46,6 +46,18 @@ try
     t = Task_Visual_Post(T, P.ifi);
 
 
+    %% Audio-Visual based on Cue-Target paradigm
+    %---------------------------------------------------------------------------
+    %---------------------------------------------------------------------------
+    blockOrder = 0; % use to dynamically alternate: mod(iSubject+iRun,2)
+    T = Task_AudioVisual_Prep(P, blockOrder);
+
+    T = Task_AudioVisual_Run(T,P, 1:T.nTrials);
+
+    t2 = Task_AudioVisual_Post(T,P);
+
+
+
     %% wind down again
     %---------------------------------------------------------------------------
     PTB_Close(P);
