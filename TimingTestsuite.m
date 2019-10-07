@@ -6,7 +6,7 @@
 
 % log all output from matlab's console to a file
 %-------------------------------------------------------------------------------
-diary(sprintf('logfile_%s.log',datestr(now,30)));
+diary(sprintf('logfiles/logfile_%s.log',datestr(now,30)));
 
 % minimal setup
 %-------------------------------------------------------------------------------
@@ -28,34 +28,33 @@ measuringWithPhotodiode = true;
 try
     % initiliaze machine-related stuff
     %---------------------------------------------------------------------------
-    P = InitializePTB('Peter', 127,measuringWithPhotodiode);
-    
+    P = PTB_Initialize('Peter', 127,measuringWithPhotodiode);
+
     %% Visual only
     % non-time-sensitive stuff:
     %---------------------------------------------------------------------------
     % initialize task-parameters
-    T = PrepTask_Visual(P);
-        
+    T = Task_Visual_Prep(P);
+
     % time-sensitive stuff:
     %---------------------------------------------------------------------------
     % run "visual stimuli only"
-    T = RunTask_Visual(T, P);
-    
+    T = Task_Visual_Run(T, P);
+
     % post-process (non-time-sensitive)
     %---------------------------------------------------------------------------
-    t = PostTask_Visual(T, P.ifi);
-    
-    
+    t = Task_Visual_Post(T, P.ifi);
+
+
     %% wind down again
     %---------------------------------------------------------------------------
-    ClosePTB(P);
-    
+    PTB_Close(P);
+
 catch error
-    ClosePTB();
+    PTB_Close(P);
     rethrow(error)
 end
 
 diary off
 
 % end
-
